@@ -54,11 +54,7 @@ export const Center = () => {
               }}
             >
               <Show when={!isShare() && objStore.write}>
-                <For
-                  each={
-                    ["rename", "move", "copy", "delete", "decompress"] as const
-                  }
-                >
+                <For each={["rename", "move", "copy", "delete"] as const}>
                   {(name) => {
                     return userCan(name) ? (
                       <CenterIcon
@@ -70,14 +66,6 @@ export const Center = () => {
                     ) : null
                   }}
                 </For>
-              </Show>
-              <Show when={userCan("share") && !isShare()}>
-                <CenterIcon
-                  name="share"
-                  onClick={() => {
-                    bus.emit("tool", "share")
-                  }}
-                />
               </Show>
               <CopyLink />
               <Download />

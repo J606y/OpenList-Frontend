@@ -27,7 +27,7 @@ import {
 } from "@hope-ui/solid"
 import { For, Match, onCleanup, Switch } from "solid-js"
 import { FaSolidMinus, FaSolidPlus } from "solid-icons/fa"
-import { SwitchLanguageWhite, SwitchColorMode } from "~/components"
+import { SwitchColorMode } from "~/components"
 import { useT } from "~/hooks"
 import { initialLocalSettings, local, LocalSetting, setLocal } from "~/store"
 import { bus } from "~/utils"
@@ -150,7 +150,6 @@ export const LocalSettings = () => {
           </VStack>
           <Center mt="$4">
             <HStack spacing="$4" p="$2" color="$neutral11">
-              <SwitchLanguageWhite />
               <SwitchColorMode />
             </HStack>
           </Center>

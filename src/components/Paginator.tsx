@@ -129,7 +129,6 @@ export const Paginator = (props: PaginatorProps) => {
             size={size}
             width="auto"
             px="$1"
-            variant="solid"
             colorScheme={merged.colorScheme}
           >
             <Box px={store.current > 10 ? "$1_5" : "$2"}>{store.current}</Box>

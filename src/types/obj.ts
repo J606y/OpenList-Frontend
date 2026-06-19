@@ -1,5 +1,3 @@
-import { PageResp } from "~/types/resp"
-
 export enum ObjType {
   UNKNOWN,
   FOLDER,
@@ -19,6 +17,7 @@ export interface Obj {
   sign?: string
   thumb: string
   type: ObjType
+  duration?: number
   mount_details?: MountDetails
 }
 
@@ -37,28 +36,9 @@ export type RenameObj = {
   new_name: string
 }
 
-export type ObjTree = Obj & {
-  children?: ObjTree[]
-}
-
-export type ArchiveMeta = {
-  content: ObjTree[] | null
-  encrypted: boolean
-  comment: string
-  sort?: {
-    order_by: "" | "name" | "size" | "modified"
-    order_direction: "" | "asc" | "desc"
-    extract_folder: "" | "front" | "back"
-  }
-  raw_url: string
-  sign: string
-}
-
 export type MountDetails = {
   total_space?: number
   free_space?: number
   used_space?: number
   driver_name: string
 }
-
-export type ArchiveList = PageResp<Obj>

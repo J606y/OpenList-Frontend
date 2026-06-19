@@ -159,7 +159,7 @@ export const selectIndex = (index: number, checked: boolean, one?: boolean) => {
 }
 
 export const selectAll = (checked: boolean) => {
-  setObjStore("objs", {}, (obj) => ({ selected: checked }))
+  setObjStore("objs", {}, () => ({ selected: checked }))
 }
 
 export const selectedObjs = () => {
@@ -184,7 +184,7 @@ export const isIndeterminate = () => {
 
 const selectedNum = createMemo(() => selectedObjs().length)
 
-export type LayoutType = "list" | "grid" | "image"
+export type LayoutType = "list" | "grid"
 const [pathname, setPathname] = createSignal<string>(location.pathname)
 const layoutRecord: Record<string, LayoutType> = (() => {
   try {
@@ -195,12 +195,16 @@ const layoutRecord: Record<string, LayoutType> = (() => {
 })()
 
 bus.on("pathname", (p) => setPathname(p))
+// Only the "grid" layout remains; coerce any legacy stored value
+// (per-path layoutRecord or global_default_layout, e.g. "list"/"image") to
+// "grid" so the folder never tries to render a non-existent layout.
+const normalizeLayout = (_l?: string): LayoutType => "grid"
 const [_layout, _setLayout] = createSignal<LayoutType>(
-  layoutRecord[pathname()] || local["global_default_layout"],
+  normalizeLayout(layoutRecord[pathname()] || local["global_default_layout"]),
 )
 export const layout = () => {
   const layout = layoutRecord[pathname()]
-  _setLayout(layout || local["global_default_layout"])
+  _setLayout(normalizeLayout(layout || local["global_default_layout"]))
   return _layout()
 }
 export const setLayout = (layout: LayoutType) => {

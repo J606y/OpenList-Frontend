@@ -3,10 +3,16 @@ import CornerBottom from "./CornerBottom"
 import CornerTop from "./CornerTop"
 
 const LoginBg = () => {
-  const bgColor = useColorModeValue("#a9c6ff", "#062b74")
+  const bgImage = useColorModeValue(
+    "linear-gradient(135deg, #ffd1e8 0%, #f7a8c4 50%, #ffe9f1 100%)",
+    "linear-gradient(135deg, #0b1220 0%, #1e293b 50%, #0f172a 100%)",
+  )
+  // decorative corner blobs: rose in light mode, slate blue-gray in dark mode
+  const cornerStart = useColorModeValue("#ffadd2", "#334155")
+  const cornerEnd = useColorModeValue("#e84c9a", "#1e293b")
   return (
     <Box
-      bgColor={bgColor()}
+      css={{ background: bgImage() }}
       pos="fixed"
       top="0"
       left="0"
@@ -26,7 +32,7 @@ const LoginBg = () => {
           "@sm": "-900px",
         }}
       >
-        <CornerTop />
+        <CornerTop startColor={cornerStart()} endColor={cornerEnd()} />
       </Box>
       <Box
         pos="absolute"
@@ -39,7 +45,7 @@ const LoginBg = () => {
           "@sm": "-400px",
         }}
       >
-        <CornerBottom />
+        <CornerBottom startColor={cornerStart()} endColor={cornerEnd()} />
       </Box>
     </Box>
   )

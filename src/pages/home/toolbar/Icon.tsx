@@ -44,15 +44,18 @@ export const RightIcon = <C extends ElementType = "svg">(
   props: IconProps<C> & {
     tips?: string
     icon?: IconTypes
+    // Explicit tooltip text. When set it overrides the `home.toolbar.<tips>`
+    // lookup, so buttons can reuse a label that lives elsewhere (e.g. manage).
+    label?: string
   },
 ) => {
   const t = useT()
   return (
     <Tooltip
-      disabled={!props.tips}
+      disabled={!props.tips && !props.label}
       placement="left"
       withArrow
-      label={t(`home.toolbar.${props.tips}`)}
+      label={props.label ?? t(`home.toolbar.${props.tips}`)}
     >
       <Icon
         // bgColor="$info4"

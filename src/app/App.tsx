@@ -13,7 +13,6 @@ import { Portal } from "solid-js/web"
 import { Error, FullScreenLoading } from "~/components"
 import { useLoading, useRouter, useT } from "~/hooks"
 import { setSettings } from "~/store"
-import { setArchiveExtensions } from "~/store/archive"
 import { Resp } from "~/types"
 import { base_path, bus, handleRespWithoutAuthAndNotify, r } from "~/utils"
 import { MustUser, UserOrGuest } from "./MustUser"
@@ -49,13 +48,6 @@ const App: Component = () => {
         handleRespWithoutAuthAndNotify(
           (await r.get("/public/settings")) as Resp<Record<string, string>>,
           setSettings,
-          (e) => setErr(err().concat(e)),
-        )
-      })(),
-      (async () => {
-        handleRespWithoutAuthAndNotify(
-          (await r.get("/public/archive_extensions")) as Resp<string[]>,
-          setArchiveExtensions,
           (e) => setErr(err().concat(e)),
         )
       })(),

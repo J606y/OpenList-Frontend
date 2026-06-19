@@ -12,13 +12,25 @@ import { JSXElement } from "solid-js"
 import { alphaBgColor, firstUpperCase } from "."
 
 const notify = {
-  render: (element: JSXElement) => {
+  render: (
+    element: JSXElement,
+    options?: { id?: string; persistent?: boolean; duration?: number },
+  ) => {
     notificationService.show({
+      // A stable id lets the service de-duplicate: calling show() again with the
+      // same id is a no-op instead of stacking a second identical card (which is
+      // why the announcement used to show twice and the close button "wouldn't
+      // close it" — you closed the top one and the one behind appeared).
+      id: options?.id,
+      persistent: options?.persistent,
+      duration: options?.duration,
       render: (props) => {
         return (
           <Box
             css={{
               display: "flex",
+              alignItems: "flex-start",
+              gap: "$2",
               backdropFilter: "blur(8px)",
               backgroundColor: alphaBgColor(),
               boxShadow: "$md",
@@ -26,23 +38,25 @@ const notify = {
               padding: "$3",
             }}
           >
-            <div
-              style={{
-                "flex-grow": 1,
+            {/* min-width:0 lets the content shrink/wrap instead of overflowing
+                onto the close button and stealing its clicks. */}
+            <Box
+              css={{
+                flex: 1,
+                minWidth: 0,
                 display: "flex",
-                "align-items": "center",
+                alignItems: "center",
+                overflowWrap: "anywhere",
               }}
             >
-              <div style={{ margin: "auto" }}>{element}</div>
-            </div>
-            <div style={{ display: "inline-block", padding: "5px" }}>
-              <CloseButton
-                style={{ float: "right" }}
-                right="$2"
-                top="$2"
-                onClick={props.close}
-              />
-            </div>
+              <Box css={{ margin: "auto" }}>{element}</Box>
+            </Box>
+            <CloseButton
+              flexShrink={0}
+              size="sm"
+              aria-label="close"
+              onClick={props.close}
+            />
           </Box>
         )
       },

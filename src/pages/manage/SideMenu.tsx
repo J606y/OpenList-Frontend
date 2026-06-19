@@ -7,7 +7,7 @@ import { UserMethods, UserRole } from "~/types"
 import { me } from "~/store"
 import { AnchorWithBase } from "~/components"
 import { Link } from "@solidjs/router"
-import { hoverColor, joinBase } from "~/utils"
+import { glassSidebarActiveItemCss, hoverColor, joinBase } from "~/utils"
 import { IconTypes } from "solid-icons"
 
 export interface SideMenuItemProps {
@@ -64,16 +64,17 @@ const SideMenuItemWithTo = (props: SideMenuItemProps) => {
       }}
       w="$full"
       alignItems="center"
-      _hover={{
-        bgColor: isActive() ? "$info4" : hoverColor(),
-        textDecoration: "none",
-      }}
-      px="$2"
-      py="$1_5"
-      rounded="$md"
+      _hover={
+        isActive()
+          ? { textDecoration: "none" }
+          : { bgColor: hoverColor(), textDecoration: "none" }
+      }
+      px="$2_5"
+      py="$2"
+      rounded="$lg"
       cursor="pointer"
-      bgColor={isActive() ? "$info4" : ""}
-      color={isActive() ? "$info11" : ""}
+      transition="background 0.18s ease, box-shadow 0.18s ease, color 0.18s ease"
+      css={isActive() ? glassSidebarActiveItemCss : undefined}
       external={props.external}
       // _active={{ transform: "scale(.95)", transition: "0.1s" }}
     >
@@ -99,10 +100,11 @@ const SideMenuItemWithChildren = (props: SideMenuItemProps) => {
         _hover={{
           bgColor: hoverColor(),
         }}
-        px="$2"
-        py="$1_5"
-        rounded="$md"
+        px="$2_5"
+        py="$2"
+        rounded="$lg"
         cursor="pointer"
+        transition="background 0.18s ease"
       >
         <HStack>
           <Show when={props.icon}>{<Icon mr="$2" as={props.icon} />}</Show>

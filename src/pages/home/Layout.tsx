@@ -11,7 +11,12 @@ const Index = () => {
   useTitle(getSetting("site_title"))
   const announcement = getSetting("announcement")
   if (announcement) {
-    notify.render(<Markdown children={announcement} />)
+    // Stable id de-dupes (no more stacked duplicates); persistent so it waits
+    // for the user to close it instead of racing a 3s auto-dismiss timer.
+    notify.render(<Markdown children={announcement} />, {
+      id: "announcement",
+      persistent: true,
+    })
   }
   return (
     <>

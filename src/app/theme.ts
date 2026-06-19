@@ -5,8 +5,14 @@ const theme: HopeThemeConfig = {
   initialColorMode: "system",
   lightTheme: {
     colors: {
-      // background: "$neutral2",
-      background: "#f7f8fa",
+      // sakura pink-white background
+      background: "#ffe9f1",
+    },
+  },
+  darkTheme: {
+    colors: {
+      // slate blue-gray dark background
+      background: "#0f172a",
     },
   },
   components: {

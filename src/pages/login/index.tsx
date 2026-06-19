@@ -1,19 +1,17 @@
 import {
-  Image,
   Center,
   Flex,
   Heading,
   Text,
   Input,
   Button,
-  useColorModeValue,
   HStack,
   VStack,
   Checkbox,
   Icon,
 } from "@hope-ui/solid"
 import { createMemo, createSignal, Show, onMount, onCleanup } from "solid-js"
-import { SwitchColorMode, SwitchLanguageWhite } from "~/components"
+import { SwitchColorMode } from "~/components"
 import { useFetch, useLoading, useT, useTitle, useRouter } from "~/hooks"
 import {
   changeToken,
@@ -23,6 +21,8 @@ import {
   base_path,
   handleResp,
   hashPwd,
+  glassButtonCss,
+  glassSurfaceCss,
 } from "~/utils"
 import { PResp, Resp } from "~/types"
 import LoginBg from "./LoginBg"
@@ -34,14 +34,11 @@ const supported = () =>
   !!globalThis.PublicKeyCredential?.parseRequestOptionsFromJSON
 
 const Login = () => {
-  const logos = getSetting("logo").split("\n")
-  const logo = useColorModeValue(logos[0], logos.pop())
   const t = useT()
   const title = createMemo(() => {
-    return `${t("login.login_to")} ${getSetting("site_title")}`
+    return getSetting("site_title")
   })
   useTitle(title)
-  const bgColor = useColorModeValue("white", "$neutral1")
   const [username, setUsername] = createSignal(
     localStorage.getItem("username") || "",
   )
@@ -227,18 +224,17 @@ const Login = () => {
   return (
     <Center zIndex="1" w="$full" h="100vh">
       <VStack
-        bgColor={bgColor()}
-        rounded="$xl"
+        rounded="$2xl"
         p="24px"
         w={{
           "@initial": "90%",
           "@sm": "364px",
         }}
         spacing="$4"
+        css={glassSurfaceCss}
       >
-        <Flex alignItems="center" justifyContent="space-around">
-          <Image mr="$2" boxSize="$12" src={logo()} />
-          <Heading color="$info9" fontSize="$2xl">
+        <Flex alignItems="center" justifyContent="center">
+          <Heading class="liquid-glass-title" fontSize="$3xl">
             {title()}
           </Heading>
         </Flex>
@@ -305,6 +301,7 @@ const Login = () => {
             <Button
               colorScheme="primary"
               w="$full"
+              css={glassButtonCss}
               onClick={() => {
                 if (needOpt()) {
                   setOpt("")
@@ -317,7 +314,12 @@ const Login = () => {
               {t("login.clear")}
             </Button>
           </Show>
-          <Button w="$full" loading={loading()} onClick={Login}>
+          <Button
+            w="$full"
+            css={glassButtonCss}
+            loading={loading()}
+            onClick={Login}
+          >
             {t("login.login")}
           </Button>
         </HStack>
@@ -330,19 +332,6 @@ const Login = () => {
             {ldapLoginTips}
           </Checkbox>
         </Show>
-        <Button
-          w="$full"
-          colorScheme="accent"
-          onClick={() => {
-            changeToken()
-            to(
-              decodeURIComponent(searchParams.redirect || base_path || "/"),
-              true,
-            )
-          }}
-        >
-          {t("login.use_guest")}
-        </Button>
         <Flex
           mt="$2"
           justifyContent="space-evenly"
@@ -350,7 +339,6 @@ const Login = () => {
           color="$neutral10"
           w="$full"
         >
-          <SwitchLanguageWhite />
           <SwitchColorMode />
           <SSOLogin />
           <Show when={AuthnSignEnabled}>

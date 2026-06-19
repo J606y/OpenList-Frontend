@@ -48,3 +48,165 @@
 .hope-select__option {
   flex-shrink: 0;
 }
+
+/* flowing "liquid glass" gradient animation (used by the login title) */
+@keyframes liquid-glass-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* italic flowing blue鈫抮ed鈫抌lack gradient brand title (login + home header) */
+.liquid-glass-title {
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  background-image: linear-gradient(
+    90deg,
+    #1d4eff 0%,
+    #b21fd1 22%,
+    #ff2233 38%,
+    #0a0a0f 50%,
+    #ff2233 62%,
+    #b21fd1 78%,
+    #1d4eff 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: liquid-glass-flow 6s ease-in-out infinite;
+  filter: drop-shadow(0 2px 6px rgba(80, 120, 255, 0.35));
+}
+
+/* ============================================================
+   Liquid glass buttons
+   Applies to every Hope UI button: both <Button> and <IconButton>
+   carry the .hope-button class, so this single rule resets them all.
+   The colorScheme tint is preserved automatically through
+   currentColor (danger stays red, success green, neutral smoky, ...),
+   while the surface becomes a translucent, blurred "frosted glass"
+   panel with a glossy highlight. Browsers without color-mix() fall
+   back to the neutral rgba() frost declared just above it.
+   ============================================================ */
+.hope-button {
+  background-color: rgba(255, 255, 255, 0.18) !important;
+  background-color: color-mix(
+    in srgb,
+    currentColor 16%,
+    transparent
+  ) !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(180%);
+  backdrop-filter: blur(10px) saturate(180%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -1px 2px rgba(255, 255, 255, 0.12),
+    0 4px 14px -4px rgba(31, 38, 135, 0.28) !important;
+  transition:
+    background-color 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.15s ease !important;
+}
+
+.hope-button:hover {
+  background-color: rgba(255, 255, 255, 0.3) !important;
+  background-color: color-mix(
+    in srgb,
+    currentColor 26%,
+    transparent
+  ) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    0 6px 18px -4px rgba(31, 38, 135, 0.4) !important;
+}
+
+.hope-button:active {
+  background-color: color-mix(
+    in srgb,
+    currentColor 34%,
+    transparent
+  ) !important;
+}
+
+/* disabled buttons stay flat and obviously inert */
+.hope-button:disabled,
+.hope-button:hover:disabled {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background-color: rgba(0, 0, 0, 0.04) !important;
+  border-color: rgba(0, 0, 0, 0.06) !important;
+  box-shadow: none !important;
+}
+
+/* dark mode: dim the glossy white edges so the glass reads on dark bg */
+.hope-ui-dark .hope-button {
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 4px 16px -4px rgba(0, 0, 0, 0.55) !important;
+}
+
+.hope-ui-dark .hope-button:hover {
+  border-color: rgba(255, 255, 255, 0.24) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    0 6px 20px -4px rgba(0, 0, 0, 0.6) !important;
+}
+
+.hope-ui-dark .hope-button:disabled,
+.hope-ui-dark .hope-button:hover:disabled {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* ============================================================
+   Liquid glass modals / popups
+   Every Hope UI dialog renders a .hope-modal__content card and the
+   right-slide panels a .hope-drawer__content — together these cover
+   all the popups opened from the right-side tools card (new file,
+   mkdir, rename, delete, batch rename, recursive move, remove empty
+   folder, offline download, upload, and the local-settings drawer).
+   These rules turn that surface into the same frosted glass used by
+   the sidebars/cards (see src/utils/glass.ts) and softly blur the
+   overlay so the page shows through as glass.
+   ============================================================ */
+.hope-modal__overlay,
+.hope-drawer__overlay {
+  background-color: rgba(17, 24, 39, 0.35) !important;
+  -webkit-backdrop-filter: blur(6px) saturate(140%);
+  backdrop-filter: blur(6px) saturate(140%);
+}
+
+.hope-modal__content,
+.hope-drawer__content {
+  background: rgba(255, 255, 255, 0.45) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  backdrop-filter: blur(18px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.55) !important;
+  box-shadow:
+    0 8px 32px rgba(31, 38, 135, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+}
+
+/* dark mode: deeper translucent panel + dimmer glossy edges */
+.hope-ui-dark .hope-modal__overlay,
+.hope-ui-dark .hope-drawer__overlay {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.hope-ui-dark .hope-modal__content,
+.hope-ui-dark .hope-drawer__content {
+  background: rgba(24, 24, 36, 0.42) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+}

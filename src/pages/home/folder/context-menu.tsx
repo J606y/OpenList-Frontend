@@ -15,9 +15,8 @@ import {
   selectedObjs,
   userCan,
 } from "~/store"
-import { players } from "../previews/video_box"
+import { players } from "../previews/players"
 import { BsPlayCircleFill } from "solid-icons/bs"
-import { isArchive } from "~/store/archive"
 import axios from "axios"
 
 const ItemContent = (props: { name: string }) => {
@@ -65,30 +64,6 @@ export const ContextMenu = () => {
           </Item>
         )}
       </For>
-      <Item
-        hidden={!userCan("share") || isShare()}
-        onClick={() => {
-          bus.emit("tool", "share")
-        }}
-      >
-        <ItemContent name="share" />
-      </Item>
-      <Item
-        hidden={() => {
-          return (
-            isShare() ||
-            !userCan("decompress") ||
-            !objStore.write ||
-            selectedObjs().some((o) => o.is_dir) ||
-            selectedObjs().some((o) => !isArchive(o.name))
-          )
-        }}
-        onClick={() => {
-          bus.emit("tool", "decompress")
-        }}
-      >
-        <ItemContent name="decompress" />
-      </Item>
       <Item
         hidden={() => {
           return (

@@ -1,4 +1,4 @@
-import { Text, useColorModeValue, VStack, Button } from "@hope-ui/solid"
+import { Text, VStack, Button } from "@hope-ui/solid"
 import {
   createEffect,
   createMemo,
@@ -22,6 +22,10 @@ import {
   me,
 } from "~/store"
 import { UserMethods } from "~/types"
+import { glassSurfaceCss } from "~/utils"
+import { BODY_CARD_TOP, BODY_CARD_HEIGHT } from "./Sidebar"
+import { Box } from "@hope-ui/solid"
+import { Nav } from "./Nav"
 
 const Folder = lazy(() => import("./folder/Folder"))
 const File = lazy(() => import("./file/File"))
@@ -34,7 +38,6 @@ export { objBoxRef }
 
 export const Obj = () => {
   const t = useT()
-  const cardBg = useColorModeValue("white", "$neutral3")
   const { pathname, searchParams, isShare, to } = useRouter()
   const { handlePathChange, refresh } = usePath()
   const pagination = getPagination()
@@ -81,12 +84,32 @@ export const Obj = () => {
       ref={(el: HTMLDivElement) => setObjBoxRef(el)}
       class="obj-box"
       w="$full"
+      pos="sticky"
+      top={BODY_CARD_TOP}
+      h={BODY_CARD_HEIGHT}
+      overflow="auto"
       rounded="$xl"
-      bgColor={cardBg()}
       p="$2"
-      shadow="$lg"
       spacing="$2"
+      css={glassSurfaceCss}
     >
+      {/* Mobile-only breadcrumb path. Desktop shows location via the folder-tree
+          sidebar, which is hidden on phones — so the path is restored here as a
+          frosted bar pinned to the top of the file-list card. */}
+      <Box
+        display={{ "@initial": "block", "@md": "none" }}
+        w="$full"
+        pos="sticky"
+        top="0"
+        zIndex="$docked"
+        flexShrink={0}
+        rounded="$lg"
+        px="$2"
+        py="$1"
+        css={glassSurfaceCss}
+      >
+        <Nav background="transparent" />
+      </Box>
       <Suspense fallback={<FullLoading />}>
         <Switch>
           <Match when={objStore.err}>

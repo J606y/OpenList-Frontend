@@ -4,9 +4,9 @@ import { useContextMenu } from "solid-contextmenu"
 import { batch, Show } from "solid-js"
 import { CenterLoading, LinkWithPush, ImageWithError } from "~/components"
 import { usePath, useRouter, useUtil } from "~/hooks"
-import { checkboxOpen, getMainColor, local, selectIndex } from "~/store"
+import { checkboxOpen, getMainColor, selectIndex } from "~/store"
 import { ObjType, StoreObj } from "~/types"
-import { bus, hoverColor } from "~/utils"
+import { bus, glassGridItemCss } from "~/utils"
 import { getIconByObj } from "~/utils/icon"
 import { ItemCheckbox, useSelectWithMouse } from "./helper"
 
@@ -17,11 +17,7 @@ export const GridItem = (props: { obj: StoreObj; index: number }) => {
   }
   const { setPathAs } = usePath()
   const objIcon = (
-    <Icon
-      color={getMainColor()}
-      boxSize={`${parseInt(local["grid_item_size"]) - 30}px`}
-      as={getIconByObj(props.obj)}
-    />
+    <Icon color={getMainColor()} boxSize="60%" as={getIconByObj(props.obj)} />
   )
   const { show } = useContextMenu({ id: 1 })
   const { pushHref, to } = useRouter()
@@ -45,16 +41,12 @@ export const GridItem = (props: { obj: StoreObj; index: number }) => {
         spacing="$1"
         rounded="$lg"
         transition="all 0.3s"
-        _hover={{
-          transform: "scale(1.06)",
-          bgColor: hoverColor(),
-        }}
+        css={glassGridItemCss}
         as={LinkWithPush}
         href={props.obj.name}
         cursor={
           openWithDoubleClick() || toggleWithClick() ? "default" : "pointer"
         }
-        bgColor={props.obj.selected ? hoverColor() : undefined}
         on:dblclick={() => {
           if (!openWithDoubleClick()) return
           selectIndex(props.index, true, true)
@@ -84,8 +76,10 @@ export const GridItem = (props: { obj: StoreObj; index: number }) => {
       >
         <Center
           class="item-thumbnail"
-          h={`${parseInt(local["grid_item_size"])}px`}
           w="$full"
+          rounded="$lg"
+          overflow="hidden"
+          css={{ aspectRatio: "1 / 1" }}
           cursor={props.obj.type !== ObjType.IMAGE ? "inherit" : "pointer"}
           on:click={(e: MouseEvent) => {
             if (props.obj.type !== ObjType.IMAGE) return
@@ -117,10 +111,9 @@ export const GridItem = (props: { obj: StoreObj; index: number }) => {
           </Show>
           <Show when={props.obj.thumb} fallback={objIcon}>
             <ImageWithError
-              maxH="$full"
-              maxW="$full"
-              rounded="$lg"
-              shadow="$md"
+              w="$full"
+              h="$full"
+              objectFit="cover"
               fallback={<CenterLoading size="lg" />}
               fallbackErr={objIcon}
               src={props.obj.thumb}
@@ -130,8 +123,12 @@ export const GridItem = (props: { obj: StoreObj; index: number }) => {
         </Center>
         <Text
           css={{
-            whiteSpace: "nowrap",
-            textOverflow: "ellipsis",
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
+            whiteSpace: "normal",
+            wordBreak: "break-all",
+            lineHeight: 1.3,
           }}
           w="$full"
           overflow="hidden"

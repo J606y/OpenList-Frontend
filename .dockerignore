@@ -1,0 +1,7 @@
+# 让 Docker 命名上下文传输更快，并避免把 Windows 平台的 node_modules 带进 linux 构建
+node_modules
+dist
+.git
+.github
+.vscode
+.idea

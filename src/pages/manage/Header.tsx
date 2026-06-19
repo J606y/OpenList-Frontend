@@ -1,6 +1,5 @@
 import {
   Box,
-  Center,
   createDisclosure,
   Drawer,
   DrawerBody,
@@ -12,15 +11,14 @@ import {
   Heading,
   HStack,
   IconButton,
-  useColorModeValue,
 } from "@hope-ui/solid"
 import { TiThMenu } from "solid-icons/ti"
 import { IoExit } from "solid-icons/io"
-import { SwitchColorMode, SwitchLanguageWhite } from "~/components"
+import { SwitchColorMode } from "~/components"
 import { useFetch, useRouter, useT } from "~/hooks"
 import { SideMenu } from "./SideMenu"
 import { side_menu_items } from "./sidemenu_items"
-import { changeToken, handleResp, notify, r } from "~/utils"
+import { changeToken, glassSurfaceCss, handleResp, notify, r } from "~/utils"
 import { PResp } from "~/types"
 const { isOpen, onOpen, onClose } = createDisclosure()
 const [logOutReqLoading, logOutReq] = useFetch(
@@ -47,9 +45,8 @@ const Header = () => {
       zIndex="$sticky"
       height="64px"
       flexShrink={0}
-      shadow="$md"
       p="$4"
-      bgColor={useColorModeValue("$background", "$neutral2")()}
+      css={glassSurfaceCss}
     >
       <Flex alignItems="center" justifyContent="space-between" h="$full">
         <HStack spacing="$2">
@@ -61,8 +58,8 @@ const Header = () => {
             size="sm"
           />
           <Heading
+            class="liquid-glass-title"
             fontSize="$xl"
-            color="$info9"
             cursor="pointer"
             onClick={() => {
               to("/@manage")
@@ -71,7 +68,8 @@ const Header = () => {
             {t("manage.title")}
           </Heading>
         </HStack>
-        <HStack spacing="$1">
+        <HStack spacing="$2" alignItems="center">
+          <SwitchColorMode asButton />
           <IconButton
             aria-label="logout"
             icon={<IoExit />}
@@ -83,17 +81,13 @@ const Header = () => {
       </Flex>
       <Drawer opened={isOpen()} placement="left" onClose={onClose}>
         <DrawerOverlay />
-        <DrawerContent>
+        <DrawerContent css={glassSurfaceCss}>
           <DrawerCloseButton />
-          <DrawerHeader color="$info9">{t("manage.title")}</DrawerHeader>
+          <DrawerHeader class="liquid-glass-title">
+            {t("manage.title")}
+          </DrawerHeader>
           <DrawerBody>
             <SideMenu items={side_menu_items} />
-            <Center>
-              <HStack spacing="$4" p="$2" color="$neutral11">
-                <SwitchLanguageWhite />
-                <SwitchColorMode />
-              </HStack>
-            </Center>
           </DrawerBody>
         </DrawerContent>
       </Drawer>

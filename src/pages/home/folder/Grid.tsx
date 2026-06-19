@@ -6,8 +6,7 @@ import { smartCountMsg, local, objStore } from "~/store"
 import { useSelectWithMouse } from "./helper"
 
 const GridLayout = () => {
-  const { isMouseSupported, registerSelectContainer, captureContentMenu } =
-    useSelectWithMouse()
+  const { registerSelectContainer, captureContentMenu } = useSelectWithMouse()
   registerSelectContainer()
   return (
     <>
@@ -22,10 +21,15 @@ const GridLayout = () => {
         oncapture:contextmenu={captureContentMenu}
         class="viselect-container"
         w="$full"
-        gap="$1"
-        templateColumns={`repeat(auto-fill, minmax(${
-          parseInt(local["grid_item_size"]) + 20
-        }px,1fr))`}
+        gap="$2"
+        // Fewer columns on phones so tiles don't shrink to thumbnails: 3 on a
+        // phone, 4 on large phones, the original 5 from @md up (where the
+        // sidebars frame a narrower center column anyway).
+        templateColumns={{
+          "@initial": "repeat(3, 1fr)",
+          "@sm": "repeat(4, 1fr)",
+          "@md": "repeat(5, 1fr)",
+        }}
       >
         <For each={objStore.objs}>
           {(obj, i) => {

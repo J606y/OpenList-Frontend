@@ -8,28 +8,35 @@ const langs = import.meta.glob("~/lang/*/index.json", {
   import: "lang",
 })
 
-// all available languages
-export const languages = Object.keys(langs).map((langPath) => {
-  const langCode = langPath.split("/")[3]
-  const langName = langs[langPath] as string
-  return { code: langCode, lang: langName }
-})
+// all available languages (English is kept only as the internal type/source
+// base — it is filtered out so it never appears as a selectable UI language)
+export const languages = Object.keys(langs)
+  .map((langPath) => {
+    const langCode = langPath.split("/")[3]
+    const langName = langs[langPath] as string
+    return { code: langCode, lang: langName }
+  })
+  .filter((lang) => lang.code !== "en")
 
-// determine browser's default language
+// match the browser language against the selectable (Chinese-only) languages
 const userLang = navigator.language.toLowerCase()
-const defaultLang =
+const browserLang =
   languages.find((lang) => lang.code.toLowerCase() === userLang)?.code ||
   languages.find(
     (lang) => lang.code.toLowerCase().split("-")[0] === userLang.split("-")[0],
-  )?.code ||
-  "en"
+  )?.code
 
-// Get initial language from localStorage or fallback to defaultLang
-export let initialLang = localStorage.getItem("lang") ?? defaultLang
+// This fork defaults to Simplified Chinese: use the browser's Chinese variant
+// when available, otherwise zh-CN.
+const fallbackLang = browserLang ?? "zh-CN"
 
-if (!languages.some((lang) => lang.code === initialLang)) {
-  initialLang = defaultLang
-}
+// An explicit, still-valid stored choice wins; otherwise use the fallback.
+// (A stale value such as a previously selected "en" is rejected here.)
+const storedLang = localStorage.getItem("lang")
+export let initialLang =
+  storedLang && languages.some((lang) => lang.code === storedLang)
+    ? storedLang
+    : fallbackLang
 
 // Type imports
 // use `type` to not include the actual dictionary in the bundle

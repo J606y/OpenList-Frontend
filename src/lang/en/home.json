@@ -44,16 +44,13 @@
       "doc": "DOC Previewer",
       "asciinema": "Asciinema Player",
       "video360": "Video360 Player",
-      "archive": "Archive Previewer",
       "torrent": "Torrent Previewer"
     }
   },
   "layouts": {
     "list": "List View",
-    "grid": "Grid View",
-    "image": "Image View"
+    "grid": "Grid View"
   },
-  "no_images": "No images in the current folder",
   "load_more": "Load more",
   "no_more": "No more",
   "input_password": "Please input password",
@@ -71,17 +68,6 @@
     "choose_dst_folder": "Select destination folder",
     "delete": "Delete",
     "delete-tips": "Are you sure to delete the selected object?",
-    "decompress": "Decompress",
-    "decompress-pass": "Extraction password: ",
-    "decompress-cache-full": "Cache full into a temp-file",
-    "decompress-put-into-new": "Decompress into a new sub-folder",
-    "extract": "Extract to",
-    "archive": {
-      "input_password": "Please input extraction password",
-      "incorrect_password": "Incorrect password",
-      "extract_header": "Extract {{path}} to..."
-    },
-    "share": "Share",
     "copy_link": "Copy link",
     "preview_page": "Preview page",
     "down_link": "Download link",
@@ -182,29 +168,16 @@
     "aria2_rpc_url": "Aria2 RPC URL",
     "aria2_rpc_secret": "Aria2 RPC secret",
     "aria2_dir": "Aria2 download directory",
-    "show_folder_in_image_view": "Show folder in image view",
-    "show_folder_in_image_view_options": {
-      "top": "Top",
-      "bottom": "Bottom",
-      "none": "None"
-    },
     "global_default_layout": "Global default layout",
     "global_default_layout_options": {
       "list": "List View",
-      "grid": "Grid View",
-      "image": "Image View"
+      "grid": "Grid View"
     },
     "position_of_header_navbar": "Position of header & nav bar",
     "position_of_header_navbar_options": {
       "static": "Normal",
       "sticky": "Stick to top of page",
       "only_navbar_sticky": "Only nav bar sticky"
-    },
-    "grid_item_size": "Grid item size",
-    "show_sidebar": "Show sidebar",
-    "show_sidebar_options": {
-      "none": "None",
-      "visible": "Visible"
     },
     "show_count_msg": "Show file count message",
     "show_count_msg_options": {
@@ -259,5 +232,9 @@
     "overwrite_existing": "Overwrite existing files",
     "skip_existing": "Skip existing files",
     "merge": "Only Copy new files and subdirectories"
+  },
+  "tree": {
+    "cannot_drop_into_self": "Cannot copy a folder into itself or its subfolder",
+    "already_in_folder": "The folder is already in the target directory"
   }
 }

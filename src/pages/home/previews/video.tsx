@@ -138,6 +138,28 @@ const Preview = () => {
           {
             type: "m2ts",
             url: url,
+            // MPEG-TS has no container-level duration; supply it (ms) so the
+            // seek bar shows total time and seeking works. 0 -> undefined.
+            duration: objStore.obj.duration
+              ? objStore.obj.duration * 1000
+              : undefined,
+          },
+          { referrerPolicy: "same-origin" },
+        )
+        flvPlayer.attachMediaElement(video)
+        flvPlayer.load()
+      },
+      ts: function (video: HTMLMediaElement, url: string) {
+        flvPlayer?.destroy()
+        flvPlayer = mpegts.createPlayer(
+          {
+            type: "mpegts",
+            url: url,
+            // MPEG-TS has no container-level duration; supply it (ms) so the
+            // seek bar shows total time and seeking works. 0 -> undefined.
+            duration: objStore.obj.duration
+              ? objStore.obj.duration * 1000
+              : undefined,
           },
           { referrerPolicy: "same-origin" },
         )
@@ -188,7 +210,7 @@ const Preview = () => {
     const { playing } = player
     player.pause()
     player.option.id = pathname()
-    player.option.type = ext(objStore.obj.name)
+    player.option.type = ext(objStore.obj.name).toLowerCase()
     player.switchUrl(url).finally(() => playing && player.play())
 
     const { subtitle, danmu } = subtitleAndDanmu()
@@ -355,8 +377,10 @@ const Preview = () => {
     switch (searchParams["auto_fullscreen"]) {
       case "true":
         auto_fullscreen = true
+        break
       case "false":
         auto_fullscreen = false
+        break
       default:
         auto_fullscreen = false
     }

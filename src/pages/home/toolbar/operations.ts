@@ -1,7 +1,7 @@
 import { IconTypes } from "solid-icons"
 import { TiDeleteOutline } from "solid-icons/ti"
-import { CgRename, CgShare } from "solid-icons/cg"
-import { TbArchive, TbFileArrowRight } from "solid-icons/tb"
+import { CgRename } from "solid-icons/cg"
+import { TbFileArrowRight } from "solid-icons/tb"
 import { TbCopy, TbLink } from "solid-icons/tb"
 import { AiTwotoneDelete } from "solid-icons/ai"
 import { CgFileAdd, CgFolderAdd, CgFolderRemove } from "solid-icons/cg"
@@ -22,7 +22,6 @@ export const operations: Operations = {
   copy: { icon: TbCopy, color: "$success9" },
   move: { icon: TbFileArrowRight, color: "$warning9" },
   delete: { icon: AiTwotoneDelete, color: "$danger9" },
-  decompress: { icon: TbArchive, color: "$neutral9" },
   copy_link: { icon: TbLink, color: "$info9" },
   mkdir: { icon: CgFolderAdd, p: true },
   recursive_move: { icon: ImMoveUp, p: true },
@@ -31,7 +30,6 @@ export const operations: Operations = {
   new_file: { icon: CgFileAdd, p: true },
   cancel_select: { icon: TiDeleteOutline },
   download: { icon: AiOutlineCloudDownload, color: "$primary9" },
-  share: { icon: CgShare, color: "$primary9" },
   offline_download_torrent: { icon: FaSolidMagnet, color: "$accent9" },
 }
 // interface Operation {

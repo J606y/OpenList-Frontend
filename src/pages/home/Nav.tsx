@@ -11,7 +11,10 @@ import { usePath, useRouter, useT } from "~/hooks"
 import { getSetting, local } from "~/store"
 import { encodePath, hoverColor, joinBase } from "~/utils"
 
-export const Nav = () => {
+// `background` defaults to the page background (opaque, for the standalone /
+// sticky navbar); pass "transparent" when embedding it on a frosted surface
+// (e.g. the mobile path bar inside the file-list card).
+export const Nav = (props: { background?: string }) => {
   const { pathname, isShare } = useRouter()
   const paths = createMemo(() => {
     if (!isShare()) {
@@ -55,7 +58,12 @@ export const Nav = () => {
   })
 
   return (
-    <Breadcrumb {...stickyProps} background="$background" class="nav" w="$full">
+    <Breadcrumb
+      {...stickyProps}
+      background={props.background ?? "$background"}
+      class="nav"
+      w="$full"
+    >
       <For each={paths()}>
         {(name, i) => {
           const isLast = createMemo(() => i() === paths().length - 1)
