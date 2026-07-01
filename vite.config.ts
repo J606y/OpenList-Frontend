@@ -26,6 +26,20 @@ function fixLegacyPolyfillDataSrc(): Plugin {
             /("id"\s*:\s*"vite-legacy-polyfill"[^}]*?)"src"\s*:/,
             (match) => match.replace(/"src"\s*:/, '"data-src":'),
           )
+          // 构建期断言:HTML 若含 legacy polyfill,处理后必须带 data-src;否则说明
+          // plugin-legacy / dynamic-base 升级改了输出格式,老浏览器 fallback 会静默失效。
+          if (chunk.source.includes('"vite-legacy-polyfill"')) {
+            const attrs = chunk.source.match(
+              /\{[^{}]*"vite-legacy-polyfill"[^{}]*\}/,
+            )
+            if (!attrs || !/"data-src"\s*:/.test(attrs[0])) {
+              throw new Error(
+                `[fix-legacy-polyfill-data-src] ${chunk.fileName}: ` +
+                  `vite-legacy-polyfill 未带 data-src,legacy 检测脚本将拿不到 polyfill URL。` +
+                  `@vitejs/plugin-legacy 或 vite-plugin-dynamic-base 可能已升级,请更新此正则。`,
+              )
+            }
+          }
         }
       }
     },

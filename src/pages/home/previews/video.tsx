@@ -59,8 +59,12 @@ const Preview = () => {
     }
   }
   let player: Artplayer
-  let flvPlayer: mpegts.Player
-  let hlsPlayer: Hls
+  let flvPlayer: mpegts.Player | undefined
+  let hlsPlayer: Hls | undefined
+  // Remember the subtitle track the user last picked (by file name) so that
+  // switching episodes keeps the same track when the new episode also has it,
+  // instead of always snapping back to the first subtitle.
+  let selectedSubtitleName: string | undefined
   let option: Option = {
     container: "#video-player",
     volume: 1.0,
@@ -171,7 +175,11 @@ const Preview = () => {
         hlsPlayer = new Hls()
         hlsPlayer.loadSource(url)
         hlsPlayer.attachMedia(video)
-        if (!video.src) {
+        // Only fall back to native HLS (Safari) when hls.js/MSE is unavailable.
+        // When Hls.isSupported() is true, setting video.src to the .m3u8 would
+        // start a second, doomed native load that races hls.js and spams the
+        // <video> error event, so leave the source to hls.js alone.
+        if (!Hls.isSupported() && !video.src) {
           video.src = url
         }
       },
@@ -207,6 +215,24 @@ const Preview = () => {
   const enableEnhanceAss = true
 
   const switchUrl = (url: string) => {
+    // Unconditionally tear down any active mpegts/hls instance before switching.
+    // artplayer's switchUrl only invokes a customType handler (which would
+    // destroy+recreate) when the new URL matches a registered suffix; switching
+    // to a natively-played source (e.g. .mp4) hits no handler, so without this
+    // the previous player would keep decoding/streaming on the replaced <video>.
+    try {
+      flvPlayer?.destroy()
+    } catch (e) {
+      console.warn("failed to destroy previous flv/ts player", e)
+    }
+    flvPlayer = undefined
+    try {
+      hlsPlayer?.destroy()
+    } catch (e) {
+      console.warn("failed to destroy previous hls player", e)
+    }
+    hlsPlayer = undefined
+
     const { playing } = player
     player.pause()
     player.option.id = pathname()
@@ -251,9 +277,16 @@ const Preview = () => {
           },
         },
       ]
+      // Restore the previously chosen track if the new episode still has a
+      // subtitle with the same name; otherwise fall back to the first one.
+      // This keeps "first entry" (nothing remembered yet) on index 0.
+      const restoreIndex = Math.max(
+        subtitle.findIndex((item) => item.name === selectedSubtitleName),
+        0,
+      )
       subtitle.forEach((item, i) => {
         innerMenu.push({
-          default: i === 0,
+          default: i === restoreIndex,
           html: (
             <span
               title={item.name}
@@ -278,6 +311,8 @@ const Preview = () => {
       })
 
       const onSelect = function (this: Artplayer, item: Setting) {
+        // Persist the picked track so a later switchUrl can restore it.
+        selectedSubtitleName = item.name
         if (enableEnhanceAss && ext(item.name).toLowerCase() === "ass") {
           isEnhanceAssMode = true
           if (!player.plugins.artplayerPluginAss) {
@@ -309,7 +344,8 @@ const Preview = () => {
         selector: innerMenu,
         onSelect,
       })
-      onSelect.call(player, innerMenu[1])
+      // innerMenu[0] is the Display toggle, so subtitle N maps to innerMenu[N+1].
+      onSelect.call(player, innerMenu[restoreIndex + 1])
     } else {
       player.setting.find("setting_subtitle") &&
         player.setting.remove("setting_subtitle")

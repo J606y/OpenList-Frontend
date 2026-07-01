@@ -1,8 +1,9 @@
 node_modules
 dist
 /src/lang/*
-!/src/lang/en/
-!/src/lang/zh-CN/
+# 放行所有语言目录(不再只 en/zh-CN):避免将来新增语言的 entry.ts 被吞、重演字典缺失。
+# 注意:若跑 crowdin 同步下载了其它语言,别无脑 git add,只提交要保留的语言。
+!/src/lang/*/
 .DS_Store
 .idea
 .test
